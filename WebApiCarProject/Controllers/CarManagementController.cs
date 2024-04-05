@@ -26,10 +26,10 @@ namespace WebApiCarProject.Controllers
         public async Task<IActionResult> GetCar(int id)
         {
             var car = await _carRepository.GetCarAsync(id);
+            
             if (car == null)
-            {
                 return NotFound();
-            }
+            
             return Ok(car);
         }
 
@@ -49,10 +49,8 @@ namespace WebApiCarProject.Controllers
         public async Task<IActionResult> PutCar(int id, [FromBody] Car car)
         {
             if (id != car.Id)
-            {
                 return BadRequest();
-            }
-
+            
             //todo update logic.
 
             await _carRepository.SaveAsync(); 
@@ -64,9 +62,7 @@ namespace WebApiCarProject.Controllers
         {
             var car = await _carRepository.GetCarAsync(id);
             if (car == null)
-            {
                 return NotFound();
-            }
             
             await _carRepository.DeleteCarAsync(id);
             await _carRepository.SaveAsync();
