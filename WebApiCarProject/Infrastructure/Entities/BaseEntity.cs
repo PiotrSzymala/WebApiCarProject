@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WebApiCar.Infrastructure.Entities
+namespace WebApiCarProject.Infrastructure.Entities
 {
     public class BaseEntity
     {

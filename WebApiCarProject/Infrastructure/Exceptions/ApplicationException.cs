@@ -1,4 +1,4 @@
-﻿namespace WebApiCar.Infrastructure.Exceptions
+﻿namespace WebApiCarProject.Infrastructure.Exceptions
 {
     public class ApplicationException : Exception
     {

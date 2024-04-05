@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
 using MediatR;
-using WebApiCar.Infrastructure.Validators;
-using WebApiCar.Models;
+using WebApiCarProject.Infrastructure.Validators;
+using WebApiCarProject.Models;
 
-namespace WebApiCar.Application.Commands
+namespace WebApiCarProject.Application.Commands
 {
     public record LoginCommand : IRequest<bool>
     {

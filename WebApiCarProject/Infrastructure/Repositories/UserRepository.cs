@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WebApiCar.Infrastructure.DatabseContexts;
-using WebApiCar.Infrastructure.Entities;
+using WebApiCarProject.Infrastructure.DatabseContexts;
+using WebApiCarProject.Infrastructure.Entities;
 
-namespace WebApiCar.Infrastructure.Repositories
+namespace WebApiCarProject.Infrastructure.Repositories
 {
     public class UserRepository : IUserRepository, IDisposable
     {

@@ -1,4 +1,4 @@
-﻿namespace WebApiCar.Models
+﻿namespace WebApiCarProject.Models
 {
     public record RegisterForm
     {

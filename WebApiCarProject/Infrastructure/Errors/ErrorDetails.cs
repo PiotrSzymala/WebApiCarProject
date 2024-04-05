@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace WebApiCar.Infrastructure.Errors
+namespace WebApiCarProject.Infrastructure.Errors
 {
     public class ErrorDetails
     {

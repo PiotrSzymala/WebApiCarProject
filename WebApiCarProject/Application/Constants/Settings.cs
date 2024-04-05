@@ -1,4 +1,4 @@
-﻿namespace WebApiCar.Application.Constants
+﻿namespace WebApiCarProject.Application.Constants
 {
     public class Settings
     {

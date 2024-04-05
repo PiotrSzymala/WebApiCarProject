@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 
-namespace WebApiCar.Application.Services
+namespace WebApiCarProject.Application.Services
 {
     public interface IAuthService
     {

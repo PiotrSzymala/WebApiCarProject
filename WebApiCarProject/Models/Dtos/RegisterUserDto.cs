@@ -1,4 +1,4 @@
-﻿namespace WebApiCar.Models.Dtos
+﻿namespace WebApiCarProject.Models.Dtos
 {
     public class RegisterUserDto
     {

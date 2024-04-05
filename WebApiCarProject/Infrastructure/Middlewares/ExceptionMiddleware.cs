@@ -1,10 +1,10 @@
 ﻿using System.Net;
 using Microsoft.OpenApi.Extensions;
-using WebApiCar.Infrastructure.Errors;
-using WebApiCar.Infrastructure.Exceptions;
-using ApplicationException = WebApiCar.Infrastructure.Exceptions.ApplicationException;
+using WebApiCarProject.Infrastructure.Errors;
+using WebApiCarProject.Infrastructure.Exceptions;
+using ApplicationException = WebApiCarProject.Infrastructure.Exceptions.ApplicationException;
 
-namespace WebApiCar.Infrastructure.Middlewares
+namespace WebApiCarProject.Infrastructure.Middlewares
 {
     public class ExceptionMiddleware : IMiddleware
     {

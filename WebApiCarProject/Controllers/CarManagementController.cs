@@ -1,24 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WebApiCar.Application.Services;
+using WebApiCarProject.Infrastructure.Repositories;
 
-namespace WebApiCar.Controllers
+namespace WebApiCarProject.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class CarManagementController
     {
-        private readonly ICarService _carService;
+        private readonly ICarRepository _carRepository;
 
-        public CarManagementController(ICarService carService)
+        public CarManagementController(ICarRepository carService)
         {
-            _carService = carService;
+            _carRepository = carService;
         }
 
-        //[HttpGet]
-        //[Route("cars/{carId}")]
-        //public async Task<ActionResult> GetCar([FromRoute] int carId)
-        //{
-
-        //}
     }
 }

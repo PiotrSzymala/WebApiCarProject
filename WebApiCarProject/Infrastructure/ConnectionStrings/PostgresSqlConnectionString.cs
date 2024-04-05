@@ -1,4 +1,4 @@
-﻿namespace WebApiCar.Infrastructure.ConnectionStrings
+﻿namespace WebApiCarProject.Infrastructure.ConnectionStrings
 {
     public class PostgresSqlConnectionString
     {

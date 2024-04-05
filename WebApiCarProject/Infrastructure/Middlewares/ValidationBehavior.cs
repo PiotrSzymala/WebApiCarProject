@@ -1,9 +1,8 @@
 ﻿using FluentValidation;
 using MediatR;
-using WebApiCar.Infrastructure.Exceptions;
-using ValidationException = WebApiCar.Infrastructure.Exceptions.ValidationException;
+using ValidationException = WebApiCarProject.Infrastructure.Exceptions.ValidationException;
 
-namespace WebApiCar.Infrastructure.Middlewares
+namespace WebApiCarProject.Infrastructure.Middlewares
 {
     public sealed class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : class, IRequest<TResponse>
     {

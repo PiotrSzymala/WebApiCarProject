@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WebApiCar.Infrastructure.Entities;
+using WebApiCarProject.Infrastructure.Entities;
 
-namespace WebApiCar.Infrastructure.DatabseContexts
+namespace WebApiCarProject.Infrastructure.DatabseContexts
 {
     public class CarDbContext : DbContext
     {

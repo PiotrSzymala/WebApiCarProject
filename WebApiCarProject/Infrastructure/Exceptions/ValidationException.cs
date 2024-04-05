@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace WebApiCar.Infrastructure.Exceptions
+namespace WebApiCarProject.Infrastructure.Exceptions
 {
     public class ValidationException : ApplicationException
     {

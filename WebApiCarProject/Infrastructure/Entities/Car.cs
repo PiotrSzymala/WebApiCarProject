@@ -1,4 +1,4 @@
-﻿namespace WebApiCar.Infrastructure.Entities
+﻿namespace WebApiCarProject.Infrastructure.Entities
 {
     public class Car : BaseEntity
     {

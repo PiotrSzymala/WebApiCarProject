@@ -1,6 +1,6 @@
-﻿using WebApiCar.Infrastructure.Entities;
+﻿using WebApiCarProject.Infrastructure.Entities;
 
-namespace WebApiCar.Infrastructure.Repositories
+namespace WebApiCarProject.Infrastructure.Repositories
 {
     public interface IUserRepository
     {

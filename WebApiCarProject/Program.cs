@@ -3,11 +3,11 @@ using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
-using WebApiCar.Application.Services;
-using WebApiCar.Infrastructure.ConnectionStrings;
-using WebApiCar.Infrastructure.DatabseContexts;
-using WebApiCar.Infrastructure.Middlewares;
-using WebApiCar.Infrastructure.Repositories;
+using WebApiCarProject.Application.Services;
+using WebApiCarProject.Infrastructure.ConnectionStrings;
+using WebApiCarProject.Infrastructure.DatabseContexts;
+using WebApiCarProject.Infrastructure.Middlewares;
+using WebApiCarProject.Infrastructure.Repositories;
 
 namespace WebApiCarProject
 {

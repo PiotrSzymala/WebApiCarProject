@@ -1,17 +1,14 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using System.Security.Claims;
+using MediatR;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebApiCarProject.Application.Commands;
+using WebApiCarProject.Application.Services;
+using WebApiCarProject.Models;
 
-using System.Security.Claims;
-using MediatR;
-using System.Net;
-using WebApiCar.Application.Commands;
-using WebApiCar.Application.Services;
-using WebApiCar.Models;
-
-
-namespace RACH.FrontendApi.Application.Controllers;
+namespace WebApiCarProject.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]

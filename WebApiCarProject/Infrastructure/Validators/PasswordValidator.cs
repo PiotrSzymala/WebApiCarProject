@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using WebApiCar.Application.Constants;
+using WebApiCarProject.Application.Constants;
 
-namespace WebApiCar.Infrastructure.Validators
+namespace WebApiCarProject.Infrastructure.Validators
 {
     public class PasswordValidator : AbstractValidator<string>
     {

@@ -1,13 +1,12 @@
-﻿using System.Net;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
-using WebApiCar.Infrastructure.DatabseContexts;
-using WebApiCar.Infrastructure.Entities;
+using WebApiCarProject.Infrastructure.DatabseContexts;
+using WebApiCarProject.Infrastructure.Entities;
 
-namespace WebApiCar.Application.Services
+namespace WebApiCarProject.Application.Services
 {
     public class AuthService : IAuthService
     {
