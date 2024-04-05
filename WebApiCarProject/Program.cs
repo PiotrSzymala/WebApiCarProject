@@ -39,7 +39,6 @@ namespace WebApiCarProject
 
             builder.Services.AddScoped<ExceptionMiddleware>();
             builder.Services.AddScoped<IAuthService, AuthService>();
-            builder.Services.AddScoped<ICarService, CarService>();
             builder.Services.AddScoped<ICarRepository, CarRepository>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
