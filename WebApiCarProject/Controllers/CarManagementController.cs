@@ -36,13 +36,13 @@ namespace WebApiCarProject.Controllers
         [HttpPost]
         public async Task<IActionResult> PostCar([FromBody] Car car)
         {
-            if (ModelState.IsValid)
-            {
-                await _carRepository.InsertCarAsync(car);
-                await _carRepository.SaveAsync();
-                return CreatedAtAction("GetCar", new { id = car.Id }, car);
-            }
-            return BadRequest(ModelState);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            
+            await _carRepository.InsertCarAsync(car);
+            await _carRepository.SaveAsync();
+            
+            return CreatedAtAction("GetCar", new { id = car.Id }, car);
         }
         
         [HttpPut("{id}")]
