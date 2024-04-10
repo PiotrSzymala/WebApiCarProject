@@ -105,7 +105,7 @@ namespace WebApiCarProject.Tests
             var mockPrincipal = new Mock<ClaimsPrincipal>();
             mockPrincipal.Setup(p => p.Identity.IsAuthenticated).Returns(false);
 
-           
+
             _controller.ControllerContext = new ControllerContext
             {
                 HttpContext = new DefaultHttpContext { User = mockPrincipal.Object }

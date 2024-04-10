@@ -54,7 +54,7 @@ namespace WebApiCarProject.Tests
             Assert.Equal(mockCar.Id, returnValue.Id);
             _mockRepo.Verify(repo => repo.GetCarAsync(1), Times.Once);
         }
-      
+
         [Fact]
         public async Task GetCar_ReturnsNotFound_WhenCarDoesNotExist()
         {
@@ -62,7 +62,7 @@ namespace WebApiCarProject.Tests
             _mockRepo.Setup(repo => repo.GetCarAsync(It.IsAny<int>())).ReturnsAsync(() => null);
 
             // Act
-            var result = await _controller.GetCar(999); 
+            var result = await _controller.GetCar(999);
 
             // Assert
             Assert.IsType<NotFoundResult>(result);
@@ -100,7 +100,7 @@ namespace WebApiCarProject.Tests
             // Assert
             Assert.IsType<BadRequestObjectResult>(result);
         }
-        
+
         [Fact]
         public async Task DeleteCar_ReturnsNoContent_WhenCarExists()
         {
