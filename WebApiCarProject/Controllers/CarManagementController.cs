@@ -26,10 +26,10 @@ namespace WebApiCarProject.Controllers
         public async Task<IActionResult> GetCar(long id)
         {
             var car = await _carRepository.GetCarAsync(id);
-            
+
             if (car == null)
                 return NotFound();
-            
+
             return Ok(car);
         }
 
@@ -38,22 +38,22 @@ namespace WebApiCarProject.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            
+
             await _carRepository.InsertCarAsync(car);
             await _carRepository.SaveAsync();
-            
+
             return CreatedAtAction("GetCar", new { id = car.Id }, car);
         }
-        
+
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCar(long id, [FromBody] Car car)
         {
             if (id != car.Id)
                 return BadRequest();
-            
+
             //todo update logic.
 
-            await _carRepository.SaveAsync(); 
+            await _carRepository.SaveAsync();
             return NoContent();
         }
 
@@ -63,10 +63,10 @@ namespace WebApiCarProject.Controllers
             var car = await _carRepository.GetCarAsync(id);
             if (car == null)
                 return NotFound();
-            
+
             await _carRepository.DeleteCarAsync(id);
             await _carRepository.SaveAsync();
-            
+
             return NoContent();
         }
     }
