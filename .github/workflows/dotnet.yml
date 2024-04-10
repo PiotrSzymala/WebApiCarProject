@@ -29,6 +29,8 @@ jobs:
         run: dotnet test ./WebApiCarProject.sln --verbosity normal
       - name: Super-Linter
         uses: super-linter/super-linter@v5.7.2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: TODO to Issue
         uses: alstr/todo-to-issue-action@v4.13
       - name: Conventional Commit In Pull Requests
