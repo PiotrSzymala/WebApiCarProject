@@ -23,7 +23,7 @@ namespace WebApiCarProject.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetCar(int id)
+        public async Task<IActionResult> GetCar(long id)
         {
             var car = await _carRepository.GetCarAsync(id);
             
@@ -46,7 +46,7 @@ namespace WebApiCarProject.Controllers
         }
         
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCar(int id, [FromBody] Car car)
+        public async Task<IActionResult> PutCar(long id, [FromBody] Car car)
         {
             if (id != car.Id)
                 return BadRequest();
@@ -58,7 +58,7 @@ namespace WebApiCarProject.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCar(int id)
+        public async Task<IActionResult> DeleteCar(long id)
         {
             var car = await _carRepository.GetCarAsync(id);
             if (car == null)
