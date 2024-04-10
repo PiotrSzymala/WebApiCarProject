@@ -13,7 +13,7 @@ namespace WebApiCarProject.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<Car> GetCarAsync(int id)
+        public async Task<Car> GetCarAsync(long id)
         {
             return await _context.Cars.FirstOrDefaultAsync(x => x.Id == id);
         }
@@ -29,7 +29,7 @@ namespace WebApiCarProject.Infrastructure.Repositories
         {
             await _context.Cars.AddAsync(car);
         }
-        public async Task DeleteCarAsync(int carId)
+        public async Task DeleteCarAsync(long carId)
         {
             var car = await _context.Cars.FirstOrDefaultAsync(x => x.Id == carId);
             var result = _context.Cars.Remove(car);

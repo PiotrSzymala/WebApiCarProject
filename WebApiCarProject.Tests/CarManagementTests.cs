@@ -14,7 +14,7 @@ public class CarManagementTests
         var mockRepository = new Mock<ICarRepository>();
         var controller = new CarManagementController(mockRepository.Object);
         controller.ModelState.AddModelError("key", "error message");
-        var car = new Car { /* Initialize with invalid data if necessary */ };
+        var car = new Car { };
 
         var result = await controller.PostCar(car);
 
@@ -27,7 +27,7 @@ public class CarManagementTests
     {
         var mockRepository = new Mock<ICarRepository>();
         var controller = new CarManagementController(mockRepository.Object);
-        var testCar = new Car { Id = 1, /* inne właściwości samochodu */ };
+        var testCar = new Car { Id = 1 };
         var differentId = 2;
 
         var result = await controller.PutCar(differentId, testCar);
