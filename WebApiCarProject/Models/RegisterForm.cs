@@ -2,6 +2,6 @@
 
 public record RegisterForm
 {
-    public string Username { get; init; } = string.Empty;
-    public string Password { get; init; } = string.Empty;
+    public string Login { get; init; } = string.Empty;
+    public string Paswd { get; init; } = string.Empty;
 }
