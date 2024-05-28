@@ -33,8 +33,6 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: TODO to Issue
         uses: alstr/todo-to-issue-action@v4.13
-      - name: Conventional Commit In Pull Requests
-        uses: ytanikin/PRConventionalCommits@1.1.0
       - name: Linting and Formatting Code
         run: dotnet format
 
