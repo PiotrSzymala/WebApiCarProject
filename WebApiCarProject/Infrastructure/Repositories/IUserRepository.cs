@@ -1,10 +1,9 @@
 ﻿using WebApiCarProject.Infrastructure.Entities;
 
-namespace WebApiCarProject.Infrastructure.Repositories
+namespace WebApiCarProject.Infrastructure.Repositories;
+
+public interface IUserRepository
 {
-    public interface IUserRepository
-    {
-        Task<User> GetUserAsync(string mail);
-        Task<IEnumerable<User>> GetAllUsersAsync();
-    }
+    Task<User> GetUserAsync(string mail);
+    Task<IEnumerable<User>> GetAllUsersAsync();
 }

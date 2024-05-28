@@ -1,22 +1,21 @@
-﻿namespace WebApiCarProject.Infrastructure.Exceptions
+﻿namespace WebApiCarProject.Infrastructure.Exceptions;
+
+public class ApplicationException : Exception
 {
-    public class ApplicationException : Exception
+    public ApplicationException(int statusCode, string message) : base(message)
     {
-        public int StatusCode { get; set; }
+        StatusCode = statusCode;
+    }
 
-        public ApplicationException(int statusCode, string message) : base(message)
-        {
-            StatusCode = statusCode;
-        }
+    public ApplicationException(int statusCode)
+    {
+        StatusCode = statusCode;
+    }
 
-        public ApplicationException(int statusCode) : base()
-        {
-            StatusCode = statusCode;
-        }
+    public int StatusCode { get; set; }
 
-        public override string ToString()
-        {
-            return $"{{ StatusCode: {StatusCode}, Message: {Message} }}";
-        }
+    public override string ToString()
+    {
+        return $"{{ StatusCode: {StatusCode}, Message: {Message} }}";
     }
 }

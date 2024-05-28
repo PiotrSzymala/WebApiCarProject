@@ -6,59 +6,58 @@ using Microsoft.EntityFrameworkCore;
 using WebApiCarProject.Infrastructure.DatabseContexts;
 using WebApiCarProject.Infrastructure.Entities;
 
-namespace WebApiCarProject.Application.Services
+namespace WebApiCarProject.Application.Services;
+
+public class AuthService : IAuthService
 {
-    public class AuthService : IAuthService
+    private readonly CarDbContext _context;
+
+    public AuthService(CarDbContext context)
     {
-        private readonly CarDbContext _context;
+        _context = context;
+    }
 
-        public AuthService(CarDbContext context)
+    public async Task<bool> Register(string username, string password)
+    {
+        User user = new()
         {
-            _context = context;
-        }
-        public async Task<bool> Register(string username, string password)
+            Username = username,
+            PasswordHash = HashPassword(password)
+        };
+        await _context.Users.AddAsync(user);
+
+        var userRegisteredSuccessfully = await _context.SaveChangesAsync() > 0;
+
+        if (!userRegisteredSuccessfully) throw new ApplicationException("Error while saving user to database");
+
+        return true;
+    }
+
+    public async Task<bool> Login(string username, string password)
+    {
+        var correctCredentials = await _context.Users.AsNoTracking()
+            .SingleOrDefaultAsync(u => u.Username == username && u.PasswordHash == HashPassword(password)) != null;
+
+        if (!correctCredentials)
+            throw new Exception("Could not find User by given credentials. Enter correct Username and Password.");
+        return correctCredentials;
+    }
+
+    public ClaimsIdentity GetClaimsIdentity(string login)
+    {
+        List<Claim> claims = new()
         {
-            User user = new()
-            {
-                Username = username,
-                PasswordHash = HashPassword(password)
-            };
-            await _context.Users.AddAsync(user);
+            new Claim(ClaimTypes.Name, login)
+        };
 
-            bool userRegisteredSuccessfully = (await _context.SaveChangesAsync()) > 0;
+        ClaimsIdentity claimsIdentity = new(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+        return claimsIdentity;
+    }
 
-            if (!userRegisteredSuccessfully) throw new ApplicationException("Error while saving user to database");
-
-            return true;
-        }
-
-        public async Task<bool> Login(string username, string password)
-        {
-            bool correctCredentials = (await _context.Users.AsNoTracking().SingleOrDefaultAsync(u => u.Username == username && u.PasswordHash == HashPassword(password))) != null;
-
-            if (!correctCredentials)
-            {
-                throw new Exception("Could not find User by given credentials. Enter correct Username and Password.");
-            }
-            return correctCredentials;
-        }
-
-        public ClaimsIdentity GetClaimsIdentity(string login)
-        {
-            List<Claim> claims = new()
-            {
-                new Claim(ClaimTypes.Name, login)
-            };
-
-            ClaimsIdentity claimsIdentity = new(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            return claimsIdentity;
-        }
-
-        private string HashPassword(string password)
-        {
-            using var sha256 = SHA256.Create();
-            var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-            return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
-        }
+    private string HashPassword(string password)
+    {
+        using var sha256 = SHA256.Create();
+        var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+        return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
     }
 }

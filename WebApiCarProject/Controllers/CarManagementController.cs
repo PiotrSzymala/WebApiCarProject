@@ -2,72 +2,71 @@
 using WebApiCarProject.Infrastructure.Entities;
 using WebApiCarProject.Infrastructure.Repositories;
 
-namespace WebApiCarProject.Controllers
+namespace WebApiCarProject.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class CarManagementController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class CarManagementController : ControllerBase
+    private readonly ICarRepository _carRepository;
+
+    public CarManagementController(ICarRepository carRepository)
     {
-        private readonly ICarRepository _carRepository;
+        _carRepository = carRepository;
+    }
 
-        public CarManagementController(ICarRepository carRepository)
-        {
-            _carRepository = carRepository;
-        }
+    [HttpGet]
+    public async Task<IActionResult> GetAllCars()
+    {
+        var cars = await _carRepository.GetAllCarsAsync();
+        return Ok(cars);
+    }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllCars()
-        {
-            var cars = await _carRepository.GetAllCarsAsync();
-            return Ok(cars);
-        }
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetCar(long id)
+    {
+        var car = await _carRepository.GetCarAsync(id);
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetCar(long id)
-        {
-            var car = await _carRepository.GetCarAsync(id);
+        if (car == null)
+            return NotFound();
 
-            if (car == null)
-                return NotFound();
+        return Ok(car);
+    }
 
-            return Ok(car);
-        }
+    [HttpPost]
+    public async Task<IActionResult> PostCar([FromBody] Car car)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
 
-        [HttpPost]
-        public async Task<IActionResult> PostCar([FromBody] Car car)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+        await _carRepository.InsertCarAsync(car);
+        await _carRepository.SaveAsync();
 
-            await _carRepository.InsertCarAsync(car);
-            await _carRepository.SaveAsync();
+        return CreatedAtAction("GetCar", new { id = car.Id }, car);
+    }
 
-            return CreatedAtAction("GetCar", new { id = car.Id }, car);
-        }
+    [HttpPut("{id}")]
+    public async Task<IActionResult> PutCar(long id, [FromBody] Car car)
+    {
+        if (id != car.Id)
+            return BadRequest();
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutCar(long id, [FromBody] Car car)
-        {
-            if (id != car.Id)
-                return BadRequest();
+        //todo update logic.
 
-            //todo update logic.
+        await _carRepository.SaveAsync();
+        return NoContent();
+    }
 
-            await _carRepository.SaveAsync();
-            return NoContent();
-        }
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteCar(long id)
+    {
+        var car = await _carRepository.GetCarAsync(id);
+        if (car == null)
+            return NotFound();
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCar(long id)
-        {
-            var car = await _carRepository.GetCarAsync(id);
-            if (car == null)
-                return NotFound();
+        await _carRepository.DeleteCarAsync(id);
+        await _carRepository.SaveAsync();
 
-            await _carRepository.DeleteCarAsync(id);
-            await _carRepository.SaveAsync();
-
-            return NoContent();
-        }
+        return NoContent();
     }
 }

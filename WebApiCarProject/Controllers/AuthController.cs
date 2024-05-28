@@ -14,8 +14,8 @@ namespace WebApiCarProject.Controllers;
 [Route("api/[controller]")]
 public class AuthController : ControllerBase
 {
-    private readonly IMediator _mediator;
     private readonly IAuthService _authService;
+    private readonly IMediator _mediator;
 
     public AuthController(IMediator mediator, IAuthService authService)
     {
@@ -28,7 +28,7 @@ public class AuthController : ControllerBase
     {
         RegisterCommand command = new(registerForm);
 
-        bool result = await _mediator.Send(command);
+        var result = await _mediator.Send(command);
 
         return result ? Ok(result) : BadRequest();
     }
@@ -38,11 +38,12 @@ public class AuthController : ControllerBase
     {
         LoginCommand command = new(loginForm);
 
-        bool result = await _mediator.Send(command);
+        var result = await _mediator.Send(command);
 
         if (result)
         {
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(_authService.GetClaimsIdentity(loginForm.Username)));
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(_authService.GetClaimsIdentity(loginForm.Username)));
 
             return Ok(result);
         }
