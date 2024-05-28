@@ -33,27 +33,10 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: TODO to Issue
         uses: alstr/todo-to-issue-action@v4.13
-      - name: Conventional Commit In Pull Requests
-        uses: ytanikin/PRConventionalCommits@1.1.0
-        with:
-          task_types: '["feat","fix","docs","style","refactor","perf","test","build","ci","chore","revert"]'
       - name: Linting and Formatting Code
         run: dotnet format
 
-  conventional-commits:
-    needs: build-and-test-linux
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-      - name: Conventional Commits Checker
-        uses: amannn/action-semantic-pull-request@v3
-        with:
-          types: |
-            feat,fix,docs,style,refactor,perf,test,build,ci,chore,revert
-
   deploy:
-    needs: conventional-commits
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     steps:
