@@ -1,8 +1,7 @@
-﻿namespace WebApiCarProject.Infrastructure.Entities
+﻿namespace WebApiCarProject.Infrastructure.Entities;
+
+public class User : BaseEntity
 {
-    public class User : BaseEntity
-    {
-        public string Username { get; init; }
-        public string PasswordHash { get; init; }
-    }
+    public string Username { get; init; }
+    public string PasswordHash { get; init; }
 }

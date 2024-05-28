@@ -4,91 +4,85 @@ using WebApiCarProject.Infrastructure.Errors;
 using WebApiCarProject.Infrastructure.Exceptions;
 using ApplicationException = WebApiCarProject.Infrastructure.Exceptions.ApplicationException;
 
-namespace WebApiCarProject.Infrastructure.Middlewares
+namespace WebApiCarProject.Infrastructure.Middlewares;
+
+public class ExceptionMiddleware : IMiddleware
 {
-    public class ExceptionMiddleware : IMiddleware
+    private readonly ILogger<ExceptionMiddleware> _logger;
+
+    public ExceptionMiddleware(ILogger<ExceptionMiddleware> logger)
     {
-        private readonly ILogger<ExceptionMiddleware> _logger;
+        _logger = logger;
+    }
 
-        public ExceptionMiddleware(ILogger<ExceptionMiddleware> logger)
+    public async Task InvokeAsync(HttpContext httpContext, RequestDelegate next)
+    {
+        try
         {
-            _logger = logger;
+            await next(httpContext);
+
+            if (httpContext.Response.StatusCode == (int)HttpStatusCode.Unauthorized) throw new Exception();
         }
-
-        public async Task InvokeAsync(HttpContext httpContext, RequestDelegate next)
+        catch (ApplicationException ex)
         {
-            try
+            _logger.LogError($"{ex}");
+            await HandleExceptionAsync(httpContext, ex);
+        }
+        catch (Exception unrecognizedException)
+        {
+            _logger.LogError($"{unrecognizedException}");
+            await HandleExceptionAsync(httpContext, unrecognizedException);
+        }
+    }
+
+    private async Task HandleExceptionAsync(HttpContext context, ApplicationException exception)
+    {
+        context.Response.ContentType = "application/json";
+        context.Response.StatusCode = exception.StatusCode;
+
+        var title = exception.GetType().Name;
+        var message = GetMessage(exception);
+
+        await context.Response.WriteAsync(
+            new ErrorDetails
             {
-                await next(httpContext);
+                StatusCode = context.Response.StatusCode,
+                Title = title,
+                Message = message
+            }.ToString()
+        );
+    }
 
-                if (httpContext.Response.StatusCode == (int)HttpStatusCode.Unauthorized)
-                {
-                    throw new Exception();
-                }
-            }
-            catch (ApplicationException ex)
+    private async Task HandleExceptionAsync(HttpContext context, Exception exception)
+    {
+        context.Response.ContentType = "application/json";
+        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+
+        var title = HttpStatusCode.InternalServerError.GetDisplayName();
+        var message = exception.Message;
+
+        await context.Response.WriteAsync(
+            new ErrorDetails
             {
-                _logger.LogError($"{ex}");
-                await HandleExceptionAsync(httpContext, ex);
-            }
-            catch (Exception unrecognizedException)
-            {
-                _logger.LogError($"{unrecognizedException}");
-                await HandleExceptionAsync(httpContext, unrecognizedException);
-            }
-        }
+                StatusCode = context.Response.StatusCode,
+                Title = title,
+                Message = message
+            }.ToString()
+        );
+    }
 
-        private async Task HandleExceptionAsync(HttpContext context, ApplicationException exception)
+    private string GetMessage(ApplicationException exception)
+    {
+        if (exception is ValidationException validationException)
         {
-            context.Response.ContentType = "application/json";
-            context.Response.StatusCode = exception.StatusCode;
+            List<string> errorMessages = new();
 
-            string title = exception.GetType().Name;
-            string message = GetMessage(exception);
+            foreach (var error in validationException.Errors)
+                errorMessages.Add($"{error.Key}:[{string.Join(", ", error.Value)}]");
 
-            await context.Response.WriteAsync(
-                new ErrorDetails()
-                {
-                    StatusCode = context.Response.StatusCode,
-                    Title = title,
-                    Message = message
-                }.ToString()
-            );
+            return string.Join(", ", errorMessages);
         }
 
-        private async Task HandleExceptionAsync(HttpContext context, Exception exception)
-        {
-            context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-
-            string title = HttpStatusCode.InternalServerError.GetDisplayName();
-            string message = exception.Message;
-
-            await context.Response.WriteAsync(
-                new ErrorDetails()
-                {
-                    StatusCode = context.Response.StatusCode,
-                    Title = title,
-                    Message = message
-                }.ToString()
-            );
-        }
-
-        private string GetMessage(ApplicationException exception)
-        {
-            if (exception is ValidationException validationException)
-            {
-                List<string> errorMessages = new();
-
-                foreach (var error in validationException.Errors)
-                {
-                    errorMessages.Add($"{error.Key}:[{string.Join(", ", error.Value)}]");
-                }
-
-                return string.Join(", ", errorMessages);
-            }
-
-            return exception.Message;
-        }
+        return exception.Message;
     }
 }

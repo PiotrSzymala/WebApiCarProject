@@ -1,12 +1,11 @@
-﻿namespace WebApiCarProject.Infrastructure.ConnectionStrings
-{
-    public class PostgresSqlConnectionString
-    {
-        public string Value { get; }
+﻿namespace WebApiCarProject.Infrastructure.ConnectionStrings;
 
-        public PostgresSqlConnectionString(IConfiguration config)
-        {
-            Value = config.GetConnectionString("PostgresSqlConnectionString");
-        }
+public class PostgresSqlConnectionString
+{
+    public PostgresSqlConnectionString(IConfiguration config)
+    {
+        Value = config.GetConnectionString("PostgresSqlConnectionString");
     }
+
+    public string Value { get; }
 }

@@ -1,11 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WebApiCarProject.Infrastructure.Entities
+namespace WebApiCarProject.Infrastructure.Entities;
+
+public class BaseEntity
 {
-    public class BaseEntity
-    {
-        [Key]
-        public long Id { get; init; }
-        public DateTime CreatedAtUtc { get; init; } = DateTime.UtcNow;
-    }
+    [Key] public long Id { get; init; }
+
+    public DateTime CreatedAtUtc { get; init; } = DateTime.UtcNow;
 }

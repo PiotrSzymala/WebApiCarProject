@@ -1,9 +1,8 @@
-﻿namespace WebApiCarProject.Models.Dtos
+﻿namespace WebApiCarProject.Models.Dtos;
+
+public class RegisterUserDto
 {
-    public class RegisterUserDto
-    {
-        public string Mail { get; set; }
-        public string Password { get; set; }
-        public string ConfirmPassword { get; set; }
-    }
+    public string Mail { get; set; }
+    public string Password { get; set; }
+    public string ConfirmPassword { get; set; }
 }

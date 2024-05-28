@@ -3,28 +3,28 @@ using MediatR;
 using WebApiCarProject.Infrastructure.Validators;
 using WebApiCarProject.Models;
 
-namespace WebApiCarProject.Application.Commands
+namespace WebApiCarProject.Application.Commands;
+
+public record LoginCommand : IRequest<bool>
 {
-    public record LoginCommand : IRequest<bool>
+    public LoginCommand(LoginForm input)
     {
-        public string Username { get; init; }
-        public string Password { get; init; }
-        public LoginCommand(LoginForm input)
-        {
-            Username = input.Username;
-            Password = input.Password;
-        }
+        Username = input.Username;
+        Password = input.Password;
     }
 
-    public class LoginCommandValidator : AbstractValidator<LoginCommand>
-    {
-        public LoginCommandValidator()
-        {
-            RuleFor(command => command.Username)
-                .SetValidator(new UsernameValidator());
+    public string Username { get; init; }
+    public string Password { get; init; }
+}
 
-            RuleFor(command => command.Password)
-                .SetValidator(new PasswordValidator());
-        }
+public class LoginCommandValidator : AbstractValidator<LoginCommand>
+{
+    public LoginCommandValidator()
+    {
+        RuleFor(command => command.Username)
+            .SetValidator(new UsernameValidator());
+
+        RuleFor(command => command.Password)
+            .SetValidator(new PasswordValidator());
     }
 }
