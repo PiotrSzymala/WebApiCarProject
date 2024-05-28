@@ -9,6 +9,8 @@ namespace WebApiCarProject.Tests;
 
 public class AuthControllerTests
 {
+    private const string TestUsername = "testUser";
+    private const string TestPassword = "testPass";
     private readonly AuthController _controller;
     private readonly AuthServiceMock _stubAuthService;
     private readonly MediatorMock _stubMediator;
@@ -31,7 +33,7 @@ public class AuthControllerTests
     {
         // Arrange
         _stubMediator.CommandResult = true;
-        var registerForm = new RegisterForm { Username = "testUser", Password = "testPass" };
+        var registerForm = new RegisterForm { Username = TestUsername, Password = TestPassword };
 
         // Act
         var result = await _controller.Register(registerForm);
@@ -45,7 +47,7 @@ public class AuthControllerTests
     {
         // Arrange
         _stubMediator.CommandResult = false;
-        var registerForm = new RegisterForm { Username = "testUser", Password = "testPass" };
+        var registerForm = new RegisterForm { Username = TestUsername, Password = TestPassword };
 
         // Act
         var result = await _controller.Register(registerForm);
@@ -59,7 +61,7 @@ public class AuthControllerTests
     {
         // Arrange
         _stubMediator.CommandResult = false;
-        var loginForm = new LoginForm { Username = "testUser", Password = "testPass" };
+        var loginForm = new LoginForm { Username = TestUsername, Password = TestPassword };
 
         // Act
         var result = await _controller.Login(loginForm);
@@ -74,7 +76,7 @@ public class AuthControllerTests
         // Arrange
         var mockPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
         {
-            new(ClaimTypes.Name, "testUser")
+            new(ClaimTypes.Name, TestUsername)
         }, "mock"));
 
         _controller.ControllerContext = new ControllerContext
