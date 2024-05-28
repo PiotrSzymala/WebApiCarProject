@@ -35,6 +35,9 @@ jobs:
         uses: alstr/todo-to-issue-action@v4.13
       - name: Conventional Commit In Pull Requests
         uses: ytanikin/PRConventionalCommits@1.1.0
+        with:
+          task_types: |
+            feat,fix,docs,style,refactor,perf,test,build,ci,chore,revert
       - name: Linting and Formatting Code
         run: dotnet format
 
