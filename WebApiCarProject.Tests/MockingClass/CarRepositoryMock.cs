@@ -19,8 +19,8 @@ public class CarRepositoryMock : ICarRepository
     {
         return new List<Car>
         {
-            new Car { Id = 1, Brand = "Toyota", Model = "Corolla", Year = 2020 },
-            new Car { Id = 2, Brand = "Honda", Model = "Civic", Year = 2019 }
+            new() { Id = 1, Brand = "Toyota", Model = "Corolla", Year = 2020 },
+            new() { Id = 2, Brand = "Honda", Model = "Civic", Year = 2019 }
         };
     }
 
@@ -33,10 +33,7 @@ public class CarRepositoryMock : ICarRepository
     public Task DeleteCarAsync(long id)
     {
         var car = _cars.Find(c => c.Id == id);
-        if (car != null)
-        {
-            _cars.Remove(car);
-        }
+        if (car != null) _cars.Remove(car);
         return Task.CompletedTask;
     }
 

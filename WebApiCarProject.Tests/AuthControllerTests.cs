@@ -1,8 +1,6 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Moq;
-using WebApiCarProject.Application.Commands;
 using WebApiCarProject.Controllers;
 using WebApiCarProject.Models;
 using WebApiCarProject.Tests.MockingClass;
@@ -76,7 +74,7 @@ public class AuthControllerTests
         // Arrange
         var mockPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
         {
-            new Claim(ClaimTypes.Name, "testUser"),
+            new(ClaimTypes.Name, "testUser")
         }, "mock"));
 
         _controller.ControllerContext = new ControllerContext

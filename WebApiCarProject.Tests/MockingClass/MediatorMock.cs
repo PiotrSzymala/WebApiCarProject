@@ -21,21 +21,24 @@ public class MediatorMock : IMediator
         return Task.CompletedTask;
     }
 
-    public Task Publish<TNotification>(TNotification notification, CancellationToken cancellationToken = default) where TNotification : INotification
+    public Task Publish<TNotification>(TNotification notification, CancellationToken cancellationToken = default)
+        where TNotification : INotification
     {
         return Task.CompletedTask;
     }
+
     public IAsyncEnumerable<TResponse> CreateStream<TResponse>(IStreamRequest<TResponse> request,
-        CancellationToken cancellationToken = new CancellationToken())
-    {
-        throw new NotImplementedException();
-    }
-    public Task Send<TRequest>(TRequest request, CancellationToken cancellationToken = new CancellationToken()) where TRequest : IRequest
+        CancellationToken cancellationToken = new())
     {
         throw new NotImplementedException();
     }
 
-    public IAsyncEnumerable<object?> CreateStream(object request, CancellationToken cancellationToken = new CancellationToken())
+    public Task Send<TRequest>(TRequest request, CancellationToken cancellationToken = new()) where TRequest : IRequest
+    {
+        throw new NotImplementedException();
+    }
+
+    public IAsyncEnumerable<object?> CreateStream(object request, CancellationToken cancellationToken = new())
     {
         throw new NotImplementedException();
     }

@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Moq;
 using WebApiCarProject.Controllers;
 using WebApiCarProject.Infrastructure.Entities;
 using WebApiCarProject.Tests.MockingClass;
