@@ -32,7 +32,7 @@ public class AuthControllerTests
     public async Task Register_ReturnsOk_WhenRegistrationIsSuccessful()
     {
         // Arrange
-        var registerForm = ArrangeMockedRegisterForm();
+        var registerForm = ArrangeMockedRegisterForm(true);
 
         // Act
         var result = await _controller.Register(registerForm);
@@ -42,11 +42,19 @@ public class AuthControllerTests
         _mockMediator.Verify(m => m.Send(It.IsAny<RegisterCommand>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 
+    private RegisterForm ArrangeMockedRegisterForm(bool status)
+    {
+        var registerForm = new RegisterForm { Username = "testUser", Password = "testPass" };
+        _mockMediator.Setup(m => m.Send(It.IsAny<RegisterCommand>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(status);
+        return registerForm;
+    }
+
     [Fact]
     public async Task Register_ReturnsBadRequest_WhenRegistrationFails()
     {
         // Arrange
-        var registerForm = ArrangeMockedRegisterForm();
+        var registerForm = ArrangeMockedRegisterForm(false);
 
         // Act
         var result = await _controller.Register(registerForm);
@@ -54,15 +62,6 @@ public class AuthControllerTests
         // Assert
         Assert.IsType<BadRequestResult>(result);
         _mockMediator.Verify(m => m.Send(It.IsAny<RegisterCommand>(), It.IsAny<CancellationToken>()), Times.Once);
-    }
-
-    private RegisterForm ArrangeMockedRegisterForm()
-    {
-        var registerForm = new RegisterForm { Username = "testUser", Password = "testPass" };
-        _mockMediator.Setup(m => m.Send(It.IsAny<RegisterCommand>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(false);
-
-        return registerForm;
     }
 
     [Fact]
