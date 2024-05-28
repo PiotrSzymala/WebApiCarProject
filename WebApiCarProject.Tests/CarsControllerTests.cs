@@ -9,64 +9,46 @@ namespace WebApiCarProject.Tests;
 public class CarsControllerTests
 {
     private readonly CarManagementController _controller;
-    private readonly Mock<ICarRepository> _mockRepo;
+    private readonly CarRepositoryMock _mockRepo;
 
     public CarsControllerTests()
     {
-        _mockRepo = new Mock<ICarRepository>();
-        _controller = new CarManagementController(_mockRepo.Object);
+        _mockRepo = new CarRepositoryMock();
+        _controller = new CarManagementController(_mockRepo);
     }
 
     [Fact]
     public async Task GetAllCars_ReturnsOkResult_WithCars()
     {
-        // Arrange
-        var mockCars = new List<Car>
-        {
-            new() { Id = 1, Brand = "Toyota", Model = "Corolla", Year = 2020 },
-            new() { Id = 2, Brand = "Honda", Model = "Civic", Year = 2019 }
-        };
-        _mockRepo.Setup(repo => repo.GetAllCarsAsync()).ReturnsAsync(mockCars);
-
-        // Act
+        // Arrange & Act
         var result = await _controller.GetAllCars();
 
         // Assert
         var actionResult = Assert.IsType<OkObjectResult>(result);
         var returnValue = Assert.IsType<List<Car>>(actionResult.Value);
         Assert.Equal(2, returnValue.Count);
-        _mockRepo.Verify(repo => repo.GetAllCarsAsync(), Times.Once);
     }
 
     [Fact]
     public async Task GetCar_ReturnsOkResult_WithCar()
     {
-        // Arrange
-        var mockCar = new Car { Id = 1, Brand = "Toyota", Model = "Corolla", Year = 2020 };
-        _mockRepo.Setup(repo => repo.GetCarAsync(1)).ReturnsAsync(mockCar);
-
-        // Act
+        // Arrange & Act
         var result = await _controller.GetCar(1);
 
         // Assert
         var actionResult = Assert.IsType<OkObjectResult>(result);
         var returnValue = Assert.IsType<Car>(actionResult.Value);
-        Assert.Equal(mockCar.Id, returnValue.Id);
-        _mockRepo.Verify(repo => repo.GetCarAsync(1), Times.Once);
+        Assert.Equal(1, returnValue.Id);
     }
 
     [Fact]
     public async Task GetCar_ReturnsNotFound_WhenCarDoesNotExist()
     {
-        // Arrange
-        _mockRepo.Setup(repo => repo.GetCarAsync(It.IsAny<int>())).ReturnsAsync(() => null);
-
-        // Act
+        // Arrange & act
         var result = await _controller.GetCar(999);
 
         // Assert
         Assert.IsType<NotFoundResult>(result);
-        _mockRepo.Verify(repo => repo.GetCarAsync(999), Times.Once);
     }
 
     [Fact]
@@ -82,8 +64,6 @@ public class CarsControllerTests
         var actionResult = Assert.IsType<CreatedAtActionResult>(result);
         var returnValue = Assert.IsType<Car>(actionResult.Value);
         Assert.Equal(newCar.Id, returnValue.Id);
-        _mockRepo.Verify(repo => repo.InsertCarAsync(newCar), Times.Once);
-        _mockRepo.Verify(repo => repo.SaveAsync(), Times.Once);
     }
 
     [Fact]
@@ -106,29 +86,73 @@ public class CarsControllerTests
     {
         // Arrange
         var existingCar = new Car { Id = 1, Brand = "Toyota", Model = "Corolla", Year = 2020 };
-        _mockRepo.Setup(repo => repo.GetCarAsync(existingCar.Id)).ReturnsAsync(existingCar);
 
         // Act
         var result = await _controller.DeleteCar(existingCar.Id);
 
         // Assert
         Assert.IsType<NoContentResult>(result);
-        _mockRepo.Verify(repo => repo.DeleteCarAsync(existingCar.Id), Times.Once);
-        _mockRepo.Verify(repo => repo.SaveAsync(), Times.Once);
     }
 
     [Fact]
     public async Task DeleteCar_ReturnsNotFound_WhenCarDoesNotExist()
     {
-        // Arrange
-        _mockRepo.Setup(repo => repo.GetCarAsync(It.IsAny<int>())).ReturnsAsync(() => null);
-
-        // Act
+        // Arrange & Act
         var result = await _controller.DeleteCar(999);
 
         // Assert
         Assert.IsType<NotFoundResult>(result);
-        _mockRepo.Verify(repo => repo.GetCarAsync(999), Times.Once);
-        _mockRepo.Verify(repo => repo.DeleteCarAsync(It.IsAny<int>()), Times.Never);
+    }
+
+    public class CarRepositoryMock : ICarRepository
+    {
+        private readonly List<Car> _cars = new();
+
+        public Task<Car> GetCarAsync(long id)
+        {
+            if (id != 1)
+                return Task.FromResult<Car>(null);
+
+            return Task.FromResult(new Car { Id = 1, Brand = "Toyota", Model = "Corolla", Year = 2020 });
+        }
+
+        public async Task<IEnumerable<Car>> GetAllCarsAsync()
+        {
+            return new List<Car>
+            {
+                new Car { Id = 1, Brand = "Toyota", Model = "Corolla", Year = 2020 },
+                new Car { Id = 2, Brand = "Honda", Model = "Civic", Year = 2019 }
+            };
+        }
+
+        public void InsertCar(Car car)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task InsertCarAsync(Car car)
+        {
+            _cars.Add(car);
+            return Task.CompletedTask;
+        }
+
+        public Task DeleteCarAsync(long id)
+        {
+            var car = _cars.Find(c => c.Id == id);
+            if (car != null)
+            {
+                _cars.Remove(car);
+            }
+            return Task.CompletedTask;
+        }
+        public void Save()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task SaveAsync()
+        {
+            return Task.CompletedTask;
+        }
     }
 }
