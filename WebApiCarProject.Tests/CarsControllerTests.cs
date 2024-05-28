@@ -125,11 +125,6 @@ public class CarsControllerTests
             };
         }
 
-        public void InsertCar(Car car)
-        {
-            throw new NotImplementedException();
-        }
-
         public Task InsertCarAsync(Car car)
         {
             _cars.Add(car);
@@ -144,10 +139,6 @@ public class CarsControllerTests
                 _cars.Remove(car);
             }
             return Task.CompletedTask;
-        }
-        public void Save()
-        {
-            throw new NotImplementedException();
         }
 
         public Task SaveAsync()

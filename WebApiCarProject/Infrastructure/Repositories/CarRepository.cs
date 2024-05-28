@@ -25,11 +25,6 @@ public class CarRepository : ICarRepository, IDisposable
         return await _context.Cars.ToListAsync();
     }
 
-    public void InsertCar(Car car)
-    {
-        _context.Cars.Add(car);
-    }
-
     public async Task InsertCarAsync(Car car)
     {
         await _context.Cars.AddAsync(car);
@@ -39,11 +34,6 @@ public class CarRepository : ICarRepository, IDisposable
     {
         var car = await _context.Cars.FirstOrDefaultAsync(x => x.Id == carId);
         var result = _context.Cars.Remove(car);
-    }
-
-    public void Save()
-    {
-        _context.SaveChanges();
     }
 
     public async Task SaveAsync()
