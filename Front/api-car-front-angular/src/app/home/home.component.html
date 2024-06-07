@@ -1,2 +1,17 @@
-<h1>Welcome to the Home Page</h1>
-<button (click)="logout()">Logout</button>
+<div class="container">
+    <h1>Available Cars</h1>
+    <div class="car-grid" *ngIf="cars.length > 0; else noCars">
+      <div *ngFor="let car of cars" class="car-card">
+        <h2>{{ car.brand }} {{ car.model }} ({{ car.year }})</h2>
+        <p><strong>Registry Plate:</strong> {{ car.registryPlate }}</p>
+        <p><strong>VIN:</strong> {{ car.vinNumber }}</p>
+        <p><strong>Available:</strong> {{ car.isAvailable ? 'Yes' : 'No' }}</p>
+        <p><strong>Created At:</strong> {{ car.createdAtUtc | date: 'medium' }}</p>
+      </div>
+    </div>
+    <ng-template #noCars>
+      <p>No cars available.</p>
+    </ng-template>
+    <button (click)="logout()">Logout</button>
+  </div>
+  
