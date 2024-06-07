@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApiCarProject.Infrastructure.Entities;
 using WebApiCarProject.Infrastructure.Repositories;
+using WebApiCarProject.Models.Dtos;
 
 namespace WebApiCarProject.Controllers;
 
@@ -46,14 +47,20 @@ public class CarManagementController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> PutCar(long id, [FromBody] Car car)
+    public async Task<IActionResult> PutCar(long id, [FromBody] CarCreateDto carCreateDto)
     {
-        if (id != car.Id)
-            return BadRequest();
 
-        //todo update logic.
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
 
+        var fetchedCar = await _carRepository.GetCarAsync(id);
+
+        if (fetchedCar == null)
+            return NotFound();
+
+        await _carRepository.UpdateCarAsync(fetchedCar,carCreateDto);
         await _carRepository.SaveAsync();
+       
         return NoContent();
     }
 

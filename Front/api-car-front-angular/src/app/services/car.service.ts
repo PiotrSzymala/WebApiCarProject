@@ -29,6 +29,12 @@ export class CarService {
       catchError(this.handleError)
     );
   }
+  
+  updateCar(id: number, car: Partial<Car>): Observable<void> {
+    return this.http.put<void>(`${this.carApiUrl}/${id}`, car).pipe(
+      catchError(this.handleError)
+    );
+  }
 
   private handleError(error: HttpErrorResponse) {
     let errorMessage = 'Unknown error!';

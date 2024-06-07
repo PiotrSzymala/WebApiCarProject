@@ -17,6 +17,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 export class HomeComponent implements OnInit {
   cars: Car[] = [];
   showForm = false;
+  isEditMode = false;
+  currentCarId: number | null = null;
   addCarForm: FormGroup;
 
   constructor(
@@ -66,6 +68,23 @@ export class HomeComponent implements OnInit {
   }
 
   showAddCarForm() {
+    this.isEditMode = false;
+    this.currentCarId = null;
+    this.addCarForm.reset();
+    this.showForm = true;
+  }
+
+  showEditCarForm(car: Car) {
+    this.isEditMode = true;
+    this.currentCarId = car.id;
+    this.addCarForm.patchValue({
+      brand: car.brand,
+      model: car.model,
+      year: car.year,
+      registryPlate: car.registryPlate,
+      vinNumber: car.vinNumber,
+      isAvailable: car.isAvailable
+    });
     this.showForm = true;
   }
 
@@ -73,22 +92,36 @@ export class HomeComponent implements OnInit {
     this.showForm = false;
   }
 
-  addCar() {
+  saveCar() {
     if (this.addCarForm.valid) {
-      const newCar: Car = {
-        id: 0,
-        createdAtUtc: new Date().toISOString(),
-        ...this.addCarForm.value,
-        isAvailable: this.addCarForm.value.isAvailable || false
-      };
+      const carData = this.addCarForm.value;
 
-      this.carService.addCar(newCar).subscribe(car => {
-        this.cars.push(car);
-        this.addCarForm.reset();
-        this.hideAddCarForm();
-      }, error => {
-        console.error('Error adding car:', error);
-      });
+      if (this.isEditMode && this.currentCarId !== null) {
+        this.carService.updateCar(this.currentCarId, carData).subscribe(() => {
+          const index = this.cars.findIndex(car => car.id === this.currentCarId);
+          if (index !== -1) {
+            this.cars[index] = { ...this.cars[index], ...carData };
+          }
+          this.addCarForm.reset();
+          this.hideAddCarForm();
+        }, error => {
+          console.error('Error updating car:', error);
+        });
+      } else {
+        const newCar: Car = {
+          id: 0,
+          createdAtUtc: new Date().toISOString(),
+          ...carData,
+          isAvailable: carData.isAvailable || false
+        };
+        this.carService.addCar(newCar).subscribe(car => {
+          this.cars.push(car);
+          this.addCarForm.reset();
+          this.hideAddCarForm();
+        }, error => {
+          console.error('Error adding car:', error);
+        });
+      }
     }
   }
 }
