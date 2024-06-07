@@ -1,17 +1,59 @@
 <div class="container">
-    <h1>Available Cars</h1>
+    <div class="header">
+      <h1>Available Cars</h1>
+      <button class="add-car-button" (click)="showAddCarForm()">Add Car</button>
+    </div>
+    
+    <div *ngIf="showForm" class="modal">
+      <div class="modal-content">
+        <span class="close" (click)="hideAddCarForm()">&times;</span>
+        <form [formGroup]="addCarForm" (ngSubmit)="addCar()" class="add-car-form">
+          <label>
+            Brand:
+            <input formControlName="brand" required>
+          </label>
+          <label>
+            Model:
+            <input formControlName="model" required>
+          </label>
+          <label>
+            Year:
+            <input type="number" formControlName="year" required>
+          </label>
+          <label>
+            Registry Plate:
+            <input formControlName="registryPlate" required>
+          </label>
+          <label>
+            VIN Number:
+            <input formControlName="vinNumber" required>
+          </label>
+          <label>
+            Available:
+            <input type="checkbox" formControlName="isAvailable">
+          </label>
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+    </div>
+  
     <div class="car-grid" *ngIf="cars.length > 0; else noCars">
       <div *ngFor="let car of cars" class="car-card">
-        <h2>{{ car.brand }} {{ car.model }} ({{ car.year }})</h2>
+        <div class="card-header">
+          <h2>{{ car.brand }} {{ car.model }} ({{ car.year }})</h2>
+          <button class="delete-button" (click)="deleteCar(car.id)">&#10006;</button>
+        </div>
         <p><strong>Registry Plate:</strong> {{ car.registryPlate }}</p>
         <p><strong>VIN:</strong> {{ car.vinNumber }}</p>
         <p><strong>Available:</strong> {{ car.isAvailable ? 'Yes' : 'No' }}</p>
         <p><strong>Created At:</strong> {{ car.createdAtUtc | date: 'medium' }}</p>
       </div>
     </div>
+    
     <ng-template #noCars>
       <p>No cars available.</p>
     </ng-template>
+    
     <button (click)="logout()">Logout</button>
   </div>
   
