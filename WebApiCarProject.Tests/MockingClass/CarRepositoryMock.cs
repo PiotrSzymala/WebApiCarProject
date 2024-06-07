@@ -1,5 +1,6 @@
 using WebApiCarProject.Infrastructure.Entities;
 using WebApiCarProject.Infrastructure.Repositories;
+using WebApiCarProject.Models.Dtos;
 
 namespace WebApiCarProject.Tests.MockingClass;
 
@@ -35,6 +36,11 @@ public class CarRepositoryMock : ICarRepository
         var car = _cars.Find(c => c.Id == id);
         if (car != null) _cars.Remove(car);
         return Task.CompletedTask;
+    }
+
+    public Task UpdateCarAsync(Car car, CarCreateDto carCreateDto)
+    {
+        throw new NotImplementedException();
     }
 
     public Task SaveAsync()

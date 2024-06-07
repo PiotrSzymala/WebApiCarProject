@@ -53,7 +53,7 @@ public class AuthControllerTests
         var result = await _controller.Register(registerForm);
 
         // Assert
-        Assert.IsType<BadRequestResult>(result);
+        Assert.IsType<BadRequestObjectResult>(result);
     }
 
     [Fact]
