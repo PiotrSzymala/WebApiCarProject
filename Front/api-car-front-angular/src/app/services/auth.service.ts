@@ -7,7 +7,7 @@ import { catchError } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'https://localhost:7096/api/Auth';
+  private apiUrl = 'https://webapicarproject20240607192048.azurewebsites.net/api/Auth';
 
   constructor(private http: HttpClient) { }
 

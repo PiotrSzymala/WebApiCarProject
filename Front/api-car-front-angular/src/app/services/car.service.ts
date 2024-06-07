@@ -8,7 +8,7 @@ import { Car } from '../models/car.model';
   providedIn: 'root'
 })
 export class CarService {
-  private carApiUrl = 'https://localhost:7096/api/CarManagement';
+  private carApiUrl = 'https://webapicarproject20240607192048.azurewebsites.net/api/CarManagement';
 
   constructor(private http: HttpClient) { }
 
