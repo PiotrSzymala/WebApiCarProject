@@ -18,6 +18,18 @@ export class CarService {
     );
   }
 
+  deleteCar(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.carApiUrl}/${id}`).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  addCar(car: Car): Observable<Car> {
+    return this.http.post<Car>(this.carApiUrl, car).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   private handleError(error: HttpErrorResponse) {
     let errorMessage = 'Unknown error!';
     if (error.error instanceof ErrorEvent) {
