@@ -3,11 +3,11 @@
       <h1>Available Cars</h1>
       <button class="add-car-button" (click)="showAddCarForm()">Add Car</button>
     </div>
-    
+  
     <div *ngIf="showForm" class="modal">
       <div class="modal-content">
         <span class="close" (click)="hideAddCarForm()">&times;</span>
-        <form [formGroup]="addCarForm" (ngSubmit)="addCar()" class="add-car-form">
+        <form [formGroup]="addCarForm" (ngSubmit)="saveCar()" class="add-car-form">
           <label>
             Brand:
             <input formControlName="brand" required>
@@ -32,7 +32,7 @@
             Available:
             <input type="checkbox" formControlName="isAvailable">
           </label>
-          <button type="submit">Submit</button>
+          <button type="submit">{{isEditMode ? 'Update' : 'Add'}}</button>
         </form>
       </div>
     </div>
@@ -41,19 +41,20 @@
       <div *ngFor="let car of cars" class="car-card">
         <div class="card-header">
           <h2>{{ car.brand }} {{ car.model }} ({{ car.year }})</h2>
+          <button class="edit-button" (click)="showEditCarForm(car)">&#9998;</button>
           <button class="delete-button" (click)="deleteCar(car.id)">&#10006;</button>
         </div>
         <p><strong>Registry Plate:</strong> {{ car.registryPlate }}</p>
         <p><strong>VIN:</strong> {{ car.vinNumber }}</p>
         <p><strong>Available:</strong> {{ car.isAvailable ? 'Yes' : 'No' }}</p>
-        <p><strong>Created At:</strong> {{ car.createdAtUtc | date: 'medium' }}</p>
+        <p id="cratedat"><strong>Created At:</strong> {{ car.createdAtUtc | date: 'medium' }}</p>
       </div>
     </div>
-    
+  
     <ng-template #noCars>
       <p>No cars available.</p>
     </ng-template>
-    
+  
     <button (click)="logout()">Logout</button>
   </div>
   

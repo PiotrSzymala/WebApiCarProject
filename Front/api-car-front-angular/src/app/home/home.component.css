@@ -146,6 +146,18 @@
     padding: 0.2rem; /* Adjust padding if necessary */
   }
   
+  .edit-button {
+    background: transparent;
+    border: none;
+    color: yellow;
+    font-size: 1rem; /* Make the icon smaller */
+    cursor: pointer;
+    position: absolute;
+    bottom: 10px; /* Position it at the bottom */
+    left: 10px;  /* Position it at the left */
+    padding: 0.2rem; /* Adjust padding if necessary */
+  }
+  
   button {
     padding: 0.5rem 1rem;
     border: none;
@@ -161,3 +173,6 @@
     background-color: #6a1b9a;
   }
   
+  #cratedat{
+    margin-bottom: 25px;
+  }
