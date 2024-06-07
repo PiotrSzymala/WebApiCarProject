@@ -2,6 +2,6 @@
 
 public record LoginForm
 {
-    public string Username { get; init; } = string.Empty;
-    public string Password { get; init; } = string.Empty;
+    public string Login{ get; init; } = string.Empty;
+    public string Passwd { get; init; } = string.Empty;
 }

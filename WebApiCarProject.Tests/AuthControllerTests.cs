@@ -33,7 +33,7 @@ public class AuthControllerTests
     {
         // Arrange
         _stubMediator.CommandResult = true;
-        var registerForm = new RegisterForm { Login = TestUsr, Paswd = TestPswd };
+        var registerForm = new RegisterForm { Login = TestUsr, Passwd = TestPswd };
 
         // Act
         var result = await _controller.Register(registerForm);
@@ -47,7 +47,7 @@ public class AuthControllerTests
     {
         // Arrange
         _stubMediator.CommandResult = false;
-        var registerForm = new RegisterForm { Login = TestUsr, Paswd = TestPswd };
+        var registerForm = new RegisterForm { Login = TestUsr, Passwd = TestPswd };
 
         // Act
         var result = await _controller.Register(registerForm);
@@ -61,7 +61,7 @@ public class AuthControllerTests
     {
         // Arrange
         _stubMediator.CommandResult = false;
-        var loginForm = new LoginForm { Username = TestUsr, Password = TestPswd };
+        var loginForm = new LoginForm { Login = TestUsr, Passwd = TestPswd };
 
         // Act
         var result = await _controller.Login(loginForm);

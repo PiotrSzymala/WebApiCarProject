@@ -10,7 +10,7 @@ public record RegisterCommand : IRequest<bool>
     public RegisterCommand(RegisterForm input)
     {
         Username = input.Login;
-        Password = input.Paswd;
+        Password = input.Passwd;
     }
 
     public string Username { get; init; }
