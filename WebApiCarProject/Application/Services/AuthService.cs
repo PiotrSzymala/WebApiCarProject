@@ -24,6 +24,12 @@ public class AuthService : IAuthService
             Username = username,
             PasswordHash = HashPassword(password)
         };
+        
+        var isUserAlreadyExist = _context.Users.FirstOrDefault(x=>x.Username == user.Username) != null;
+
+        if (isUserAlreadyExist)
+            throw new Exception("User already created.");
+
         await _context.Users.AddAsync(user);
 
         var userRegisteredSuccessfully = await _context.SaveChangesAsync() > 0;
