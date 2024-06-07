@@ -9,8 +9,8 @@ public record LoginCommand : IRequest<bool>
 {
     public LoginCommand(LoginForm input)
     {
-        Username = input.Username;
-        Password = input.Password;
+        Username = input.Login;
+        Password = input.Passwd;
     }
 
     public string Username { get; init; }

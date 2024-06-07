@@ -1,16 +1,14 @@
 <form (ngSubmit)="register()">
-    <label>
-      Username:
-      <input type="text" [(ngModel)]="registerForm.username" name="username" required>
-    </label>
-    <label>
-      Password:
-      <input type="password" [(ngModel)]="registerForm.password" name="password" required>
-    </label>
-    <label>
-      Email:
-      <input type="email" [(ngModel)]="registerForm.email" name="email" required>
-    </label>
+  <div class="form-group">
+    <label for="login">Login:</label>
+    <input type="text" id="login" [(ngModel)]="registerForm.login" name="login" required>
+  </div>
+  <div class="form-group">
+    <label for="passwd">Password:</label>
+    <input type="password" id="passwd" [(ngModel)]="registerForm.passwd" name="passwd" required>
+  </div>
+  <div class="button-group">
     <button type="submit">Register</button>
-  </form>
-  
+    <button type="button" (click)="navigateToLogin()">Login</button>
+  </div>
+</form>

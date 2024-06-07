@@ -24,17 +24,22 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("Register")]
-    public async Task<IActionResult> Register(RegisterForm registerForm)
+    public async Task<IActionResult> Register([FromBody] RegisterForm registerForm)
     {
-        RegisterCommand command = new(registerForm);
+        if (!ModelState.IsValid)
+        {
+            var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+            return BadRequest(new { StatusCode = 400, Message = "Validation failed", Errors = errors });
+        }
 
+        RegisterCommand command = new(registerForm);
         var result = await _mediator.Send(command);
 
-        return result ? Ok(result) : BadRequest();
+        return result ? Ok(true) : BadRequest(new { StatusCode = 500, Message = "Registration failed" });
     }
 
     [HttpPost("Login")]
-    public async Task<IActionResult> Login(LoginForm loginForm)
+    public async Task<IActionResult> Login([FromBody]LoginForm loginForm)
     {
         LoginCommand command = new(loginForm);
 
@@ -43,7 +48,7 @@ public class AuthController : ControllerBase
         if (result)
         {
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(_authService.GetClaimsIdentity(loginForm.Username)));
+                new ClaimsPrincipal(_authService.GetClaimsIdentity(loginForm.Login)));
 
             return Ok(result);
         }
