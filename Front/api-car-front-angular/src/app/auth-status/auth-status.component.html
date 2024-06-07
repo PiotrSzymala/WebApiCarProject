@@ -1,0 +1,8 @@
+<div *ngIf="isAuthenticated; else loginRegisterLinks">
+    <p>You are logged in.</p>
+    <button (click)="logout()">Logout</button>
+  </div>
+  <ng-template #loginRegisterLinks>
+    <a routerLink="/login">Login</a> | <a routerLink="/register">Register</a>
+  </ng-template>
+  
