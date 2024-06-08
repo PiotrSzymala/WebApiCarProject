@@ -25,7 +25,7 @@ public class Program
         builder.Services.AddCors(options =>
         {
             options.AddPolicy("AllowSpecificOrigin",
-                builder => builder.WithOrigins("http://localhost:4200")
+                builder => builder.WithOrigins("https://webapicarproject.onrender.com")
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials());
