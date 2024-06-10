@@ -5,16 +5,17 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using WebApiCarProject.Infrastructure.DatabseContexts;
 using WebApiCarProject.Infrastructure.Entities;
+using WebApiCarProject.Infrastructure.Repositories;
 
 namespace WebApiCarProject.Application.Services;
 
 public class AuthService : IAuthService
 {
-    private readonly CarDbContext _context;
+    private readonly IGenericRepository<User> _userRepository;
 
-    public AuthService(CarDbContext context)
+    public AuthService( IGenericRepository<User> userRepository)
     {
-        _context = context;
+        _userRepository = userRepository;
     }
 
     public async Task<bool> Register(string username, string password)
@@ -24,25 +25,26 @@ public class AuthService : IAuthService
             Username = username,
             PasswordHash = HashPassword(password)
         };
-        
-        var isUserAlreadyExist = _context.Users.FirstOrDefault(x=>x.Username == user.Username) != null;
+
+        var isUserAlreadyExist = (await _userRepository.SelectAsync(x => x.Username == user.Username)) != null;
 
         if (isUserAlreadyExist)
             throw new Exception("User already created.");
 
-        await _context.Users.AddAsync(user);
+        _userRepository.Add(user);
 
-        var userRegisteredSuccessfully = await _context.SaveChangesAsync() > 0;
+        var userRegisteredSuccessfully = await _userRepository.SaveAsync() > 0;
 
-        if (!userRegisteredSuccessfully) throw new ApplicationException("Error while saving user to database");
+        if (!userRegisteredSuccessfully) 
+            throw new ApplicationException("Error while saving user to database");
 
         return true;
     }
 
     public async Task<bool> Login(string username, string password)
     {
-        var correctCredentials = await _context.Users.AsNoTracking()
-            .SingleOrDefaultAsync(u => u.Username == username && u.PasswordHash == HashPassword(password)) != null;
+        var correctCredentials = (await _userRepository.GetAllAsync())
+            .SingleOrDefault(u => u.Username == username && u.PasswordHash == HashPassword(password)) != null;
 
         if (!correctCredentials)
             throw new Exception("Could not find User by given credentials. Enter correct Username and Password.");
