@@ -1,11 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
+using WebApiCar.Migrations;
 using WebApiCarProject.Infrastructure.DatabseContexts;
 using WebApiCarProject.Infrastructure.Entities;
 using WebApiCarProject.Models.Dtos;
 
 namespace WebApiCarProject.Infrastructure.Repositories;
 
-public class CarRepository : ICarRepository, IDisposable
+public class CarRepository : IGenericRepository<Car>, IDisposable
 {
     private readonly CarDbContext _context;
 
@@ -16,47 +18,64 @@ public class CarRepository : ICarRepository, IDisposable
         _context = context;
     }
 
-    public async Task<Car> GetCarAsync(long id)
+    public IEnumerable<Car> GetAll()
     {
-        return await _context.Cars.FirstOrDefaultAsync(x => x.Id == id);
+        return _context.Cars.ToList();
     }
 
-    public async Task<IEnumerable<Car>> GetAllCarsAsync()
+    public async Task<List<Car>> GetAllAsync()
     {
         return await _context.Cars.ToListAsync();
     }
 
-    public async Task InsertCarAsync(Car car)
+    public Car GetById(int id)
     {
-        await _context.Cars.AddAsync(car);
+        return _context.Cars.FirstOrDefault(x => x.Id == id);
     }
 
-    public async Task DeleteCarAsync(long carId)
+    public async Task<Car> GetByIdAsync(int id)
     {
-        var car = await _context.Cars.FirstOrDefaultAsync(x => x.Id == carId);
-        var result = _context.Cars.Remove(car);
+        return await _context.Cars.FirstOrDefaultAsync(x => x.Id == id);
     }
 
-    public async Task UpdateCarAsync(Car car, CarCreateDto carCreateDto)
+    public void Remove(Car sender)
     {
-        var databaseCar = await _context.Cars.FirstOrDefaultAsync(x => x.Id == car.Id);
-
-        if (databaseCar == null)
-            throw new Exception("Car does not exist");
-
-        car.Brand = carCreateDto.Brand;
-        car.Model = carCreateDto.Model;
-        car.Year = carCreateDto.Year;
-        car.RegistryPlate = carCreateDto.RegistryPlate;
-        car.VinNumber = carCreateDto.VinNumber;
-        car.IsAvailable = carCreateDto.IsAvailable;
-
-        _context.Entry(databaseCar).CurrentValues.SetValues(car);
+        if (_context.Entry(sender).State == EntityState.Detached)
+            _context.Cars.Attach(sender);
+        
+        _context.Cars.Remove(sender);
     }
 
-    public async Task SaveAsync()
+    public void Add(in Car sender)
     {
-        await _context.SaveChangesAsync();
+        _context.Add(sender).State = EntityState.Added;
+    }
+
+    public void Update(in Car sender)
+    {
+        _context.Entry(sender).State = EntityState.Modified;
+    }
+
+    public int Save()
+    {
+        return _context.SaveChanges();
+    }
+
+    Task<int> IGenericRepository<Car>.SaveAsync()
+    {
+        return _context.SaveChangesAsync();
+    }
+
+    public Car Select(Expression<Func<Car, bool>> predicate)
+    {
+        return _context.Cars
+            .Where(predicate).FirstOrDefault()!;
+    }
+
+    public async Task<Car> SelectAsync(Expression<Func<Car, bool>> predicate)
+    {
+        return (await _context.Cars
+                .Where(predicate).FirstOrDefaultAsync())!;
     }
 
     public void Dispose()

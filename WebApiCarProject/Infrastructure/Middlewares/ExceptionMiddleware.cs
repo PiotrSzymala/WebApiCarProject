@@ -20,65 +20,55 @@ public class ExceptionMiddleware : IMiddleware
         try
         {
             await next(httpContext);
-
-            if (httpContext.Response.StatusCode == (int)HttpStatusCode.Unauthorized) throw new Exception();
+        }
+        catch (NotFoundException ex)
+        {
+            _logger.LogError(ex, "NotFoundException occurred");
+            await HandleExceptionAsync(httpContext, ex, HttpStatusCode.NotFound);
         }
         catch (ApplicationException ex)
         {
-            _logger.LogError($"{ex}");
-            await HandleExceptionAsync(httpContext, ex);
+            _logger.LogError(ex, "ApplicationException occurred");
+            await HandleExceptionAsync(httpContext, ex, (HttpStatusCode)ex.StatusCode);
         }
-        catch (Exception unrecognizedException)
+        catch (Exception ex)
         {
-            _logger.LogError($"{unrecognizedException}");
-            await HandleExceptionAsync(httpContext, unrecognizedException);
+            _logger.LogError(ex, "An unhandled exception occurred");
+            await HandleExceptionAsync(httpContext, ex, HttpStatusCode.InternalServerError);
         }
     }
 
-    private async Task HandleExceptionAsync(HttpContext context, ApplicationException exception)
+    private async Task HandleExceptionAsync(HttpContext context, Exception exception, HttpStatusCode statusCode)
     {
         context.Response.ContentType = "application/json";
-        context.Response.StatusCode = exception.StatusCode;
+        context.Response.StatusCode = (int)statusCode;
 
         var title = exception.GetType().Name;
-        var message = GetMessage(exception);
-
-        await context.Response.WriteAsync(
-            new ErrorDetails
-            {
-                StatusCode = context.Response.StatusCode,
-                Title = title,
-                Message = message
-            }.ToString()
-        );
-    }
-
-    private async Task HandleExceptionAsync(HttpContext context, Exception exception)
-    {
-        context.Response.ContentType = "application/json";
-        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-
-        var title = HttpStatusCode.InternalServerError.GetDisplayName();
         var message = exception.Message;
 
-        await context.Response.WriteAsync(
-            new ErrorDetails
-            {
-                StatusCode = context.Response.StatusCode,
-                Title = title,
-                Message = message
-            }.ToString()
-        );
+        if (exception is ApplicationException appException)
+        {
+            title = appException.GetType().Name;
+            message = GetMessage(appException);
+        }
+
+        var errorDetails = new ErrorDetails
+        {
+            StatusCode = context.Response.StatusCode,
+            Title = title,
+            Message = message
+        };
+
+        await context.Response.WriteAsync(errorDetails.ToString());
     }
 
     private string GetMessage(ApplicationException exception)
     {
         if (exception is ValidationException validationException)
         {
-            List<string> errorMessages = new();
-
-            foreach (var error in validationException.Errors)
-                errorMessages.Add($"{error.Key}:[{string.Join(", ", error.Value)}]");
+            var errorMessages = validationException.Errors
+                .Select(error => $"{error.Key}: [{string.Join(", ", error.Value)}]")
+                .ToList();
 
             return string.Join(", ", errorMessages);
         }

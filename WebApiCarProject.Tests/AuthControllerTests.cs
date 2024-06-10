@@ -1,9 +1,13 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Moq;
 using WebApiCarProject.Controllers;
+using WebApiCarProject.Application.Commands;
+using WebApiCarProject.Application.Services;
 using WebApiCarProject.Models;
-using WebApiCarProject.Tests.MockingClass;
+using Xunit;
+using MediatR;
 
 namespace WebApiCarProject.Tests;
 
@@ -12,17 +16,17 @@ public class AuthControllerTests
     private const string TestUsr = "testUsr";
     private const string TestPswd = "testPswd";
     private readonly AuthController _controller;
-    private readonly AuthServiceMock _stubAuthService;
-    private readonly MediatorMock _stubMediator;
+    private readonly Mock<IAuthService> _mockAuthService;
+    private readonly Mock<IMediator> _mockMediator;
 
     public AuthControllerTests()
     {
-        _stubAuthService = new AuthServiceMock();
-        _stubMediator = new MediatorMock();
+        _mockAuthService = new Mock<IAuthService>();
+        _mockMediator = new Mock<IMediator>();
 
         var httpContext = new DefaultHttpContext();
 
-        _controller = new AuthController(_stubMediator, _stubAuthService)
+        _controller = new AuthController(_mockMediator.Object, _mockAuthService.Object)
         {
             ControllerContext = new ControllerContext { HttpContext = httpContext }
         };
@@ -32,35 +36,41 @@ public class AuthControllerTests
     public async Task Register_ReturnsOk_WhenRegistrationIsSuccessful()
     {
         // Arrange
-        _stubMediator.CommandResult = true;
+        _mockMediator.Setup(m => m.Send(It.IsAny<RegisterCommand>(), It.IsAny<CancellationToken>()))
+                     .ReturnsAsync(true);
         var registerForm = new RegisterForm { Login = TestUsr, Passwd = TestPswd };
 
         // Act
         var result = await _controller.Register(registerForm);
 
         // Assert
-        Assert.IsType<OkObjectResult>(result);
+        var actionResult = Assert.IsType<OkObjectResult>(result);
+        Assert.True((bool)actionResult.Value);
     }
 
     [Fact]
     public async Task Register_ReturnsBadRequest_WhenRegistrationFails()
     {
         // Arrange
-        _stubMediator.CommandResult = false;
+        _mockMediator.Setup(m => m.Send(It.IsAny<RegisterCommand>(), It.IsAny<CancellationToken>()))
+                     .ReturnsAsync(false);
         var registerForm = new RegisterForm { Login = TestUsr, Passwd = TestPswd };
 
         // Act
         var result = await _controller.Register(registerForm);
 
         // Assert
-        Assert.IsType<BadRequestObjectResult>(result);
+        var actionResult = Assert.IsType<BadRequestObjectResult>(result);
+        var response = Assert.IsType<BadRequestObjectResult>(result);
+        Assert.Equal(400, response.StatusCode);
     }
 
     [Fact]
     public async Task Login_ReturnsBadRequest_WhenLoginFails()
     {
         // Arrange
-        _stubMediator.CommandResult = false;
+        _mockMediator.Setup(m => m.Send(It.IsAny<LoginCommand>(), It.IsAny<CancellationToken>()))
+                     .ReturnsAsync(false);
         var loginForm = new LoginForm { Login = TestUsr, Passwd = TestPswd };
 
         // Act
