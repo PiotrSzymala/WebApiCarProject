@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using WebApiCarProject.Application.Services;
 using WebApiCarProject.Infrastructure.ConnectionStrings;
 using WebApiCarProject.Infrastructure.DatabseContexts;
+using WebApiCarProject.Infrastructure.Entities;
 using WebApiCarProject.Infrastructure.Middlewares;
 using WebApiCarProject.Infrastructure.Repositories;
 
@@ -50,8 +51,9 @@ public class Program
 
         builder.Services.AddScoped<ExceptionMiddleware>();
         builder.Services.AddScoped<IAuthService, AuthService>();
-        builder.Services.AddScoped<ICarRepository, CarRepository>();
-        builder.Services.AddScoped<IUserRepository, UserRepository>();
+        builder.Services.AddScoped<ICarService, CarService>();
+        builder.Services.AddScoped<IGenericRepository<Car>, CarRepository>();
+        builder.Services.AddScoped<IGenericRepository<User>, UserRepository>();
         builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
         builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
         builder.Services.AddMediatR(cfg =>
